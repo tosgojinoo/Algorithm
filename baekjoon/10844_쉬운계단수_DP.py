@@ -12,7 +12,7 @@
 #   - 1 or 2 포함
 
 n = int(input())
-dp = [[0 for i in range(10)] for j in range(101)] # 100 x 10
+dp = [[0] * 10 for j in range(101)] # 100 x 10
 # init값
 for i in range(1, 10):
     dp[1][i] = 1 # 1번째행, 0을 제외한 모든 수에 1 입력

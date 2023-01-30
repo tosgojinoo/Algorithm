@@ -1,3 +1,7 @@
+# 지점당 높이
+# 상하좌우, 항상 내리막으로만 이동
+# (0,0) 출발 (M-1, N-1) 도착
+
 # DFS + DP (Top-down + Recursion)
 # 정당성 검토:
 #   1) 전체 문제의 최적해 == 부분 문제의 최적해의 합
@@ -10,6 +14,19 @@
 #       a. -1: 아예 가보지 않은 곳과 이전 합이 0인 곳을 구분 가능
 #       b. 0: 가보지 않은 곳과 DP 합을 구분할 수 없음
 
+# [순서]
+# DP memory
+#   - [[상하좌우] * N] for _ in range M] => x
+# visited
+#   - memory 대신 단순 visited 사용
+#   - 단, 초기값을 -1로 설정 (방문 여부, 4방향합 0 구분 위함)
+# 제한 or 초기값
+#   - Dn-1 == 도착지점 or 바운더리 밖일 경우 제외
+#   - D1 = 지정
+# 점화식
+#   - Dn = sum(Dn-1(상하좌우)), 상하좌우는 idx 값에 따라 moves 적용
+
+
 
 # import sys
 # sys.setrecursionlimit(10**6)
@@ -18,10 +35,12 @@ def DFS_DP(y, x):
     global visited
 
     # 도착 지점에 도달하면 1(한 가지 경우의 수)를 리턴
-    if y==M-1 and x==N-1: return 1
+    if y==M-1 and x==N-1:
+        return 1
 
     # 이미 방문한 적이 있다면 그 위치에서 출발하는 경우의 수를 리턴, DFS 종료
-    if visited[y][x] != -1: return visited[y][x]
+    if visited[y][x] != -1:
+        return visited[y][x]
 
     cnt=0
     for dy, dx in moves:

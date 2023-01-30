@@ -1,3 +1,5 @@
+# 5개 숫자 중 3개 순열
+# backtracking
 def permutation(now, end):
     if now == end:
         result.append(picked.copy())

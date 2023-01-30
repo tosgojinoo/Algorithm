@@ -1,3 +1,4 @@
+# 중복 순열
 def permutation_repetition(now, end):
     global picked
     if now == end :
