@@ -27,7 +27,6 @@
 #   - Dn = sum(Dn-1(상하좌우)), 상하좌우는 idx 값에 따라 moves 적용
 
 
-
 # import sys
 # sys.setrecursionlimit(10**6)
 

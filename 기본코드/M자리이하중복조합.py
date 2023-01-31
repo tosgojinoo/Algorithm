@@ -1,11 +1,11 @@
 # 1
 def comb(num):
-	if len(num) == 3:
-		return
-	for i in range(N):
-	  touch_list.append(num+str(can_touch[i]))
-	  if num+str(can_touch[i]) != '0':
-	    comb(num+str(can_touch[i]))
+    if len(num) == 3:
+        return
+    for i in range(N):
+        touch_list.append(num+str(can_touch[i]))
+        if num+str(can_touch[i]) != '0':
+            comb(num+str(can_touch[i]))
 
 M = int(input())
 can_touch = list(map(int, input().split()))
