@@ -1,77 +1,78 @@
 # DFS, backtrack, bruteforce
 # BFS 대비 시간 10~20배 정도
 
-delta = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-def backtrack(inboard, inred, inblue, ind=0):
-    global result, cnt, delta
-    # if result == 1:
-    #     return
-    if ind == 10:
-        return
-    else:
-        for i in range(4):
-            tmp_board = [inboard[j][:] for j in range(N)]
-            tmp_red = inred[:]
-            tmp_blue = inblue[:]
-            # direction 0:상,1:하, 2:좌, 3:우
-            move_check = True
-            while move_check:
-                # 구슬 이동 없으면 break
-                if tmp_red == [-1,-1] and tmp_blue == [-1,-1]:
-                    break
-                move_check = False
-                rx, ry = tmp_red
-                bx, by = tmp_blue
-                drx = rx + delta[i][0]
-                dry = ry + delta[i][1]
-                dbx = bx + delta[i][0]
-                dby = by + delta[i][1]
-                # 벽, 구슬을 지나가면안됨
-                # 구슬이 구멍에 닿으면 제거
-                if tmp_board[drx][dry] == '.':
-                    tmp_board[drx][dry] = 'R'
-                    tmp_board[rx][ry] = '.'
-                    tmp_red = [drx, dry]
-                    move_check = True
-                elif tmp_board[drx][dry] == 'O':
-                    tmp_board[rx][ry] = '.'
-                    tmp_red = [-1, -1]
-                    move_check = True
+def DFS(ry, rx, by, bx, cnt):
+    global result # 빨간 구슬 들어 갔을 때 cnt 저장
 
-                if tmp_board[dbx][dby] == '.':
-                    tmp_board[dbx][dby] = 'B'
-                    tmp_board[bx][by] = '.'
-                    tmp_blue = [dbx, dby]
-                    move_check = True
-                elif tmp_board[dbx][dby] == 'O':
-                    tmp_board[bx][by] = '.'
-                    tmp_blue = [-1, -1]
-                    move_check = True
-            # if red만 없으면 return 1
-            if tmp_red == [-1, -1] and tmp_blue != [-1, -1]:
-                result = 1
-                cnt = min(cnt, ind + 1)
-            ####
-            backtrack(tmp_board, tmp_red, tmp_blue, ind + 1)
-    return
+    if result <= cnt: # 종료조건: 기울이 회수 cnt가 최소값 아닐 경우
+        return
+
+    if cnt > 10: # 종료조건: 기울인 회수 cnt가 10번 초과
+        return
+
+    # 4방향으로 기울이기
+    for dy, dx in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        flag = 0
+        rny, rnx = ry + dy, rx + dx
+        bny, bnx = by + dy, bx + dx
+
+        if arr[rny][rnx] != '#' or arr[bny][bnx] != '#':
+            # 기울였을 때 빨간 구슬 위치
+            rdist = 0
+            for mv in range(1, N+M): # 갈수 있을 때까지 이동. 계산량 감소 위해 max() 아닌 단순 N+M합 사용
+                rny, rnx = ry + mv*dy, rx + mv*dx
+
+                if arr[rny][rnx] == '#':
+                    break # 이동 종료
+                elif arr[rny][rnx] == 'O':
+                    flag = 1 # 빨간 구슬 들어감
+                    break # 이동 종료
+                elif rny == by and rnx == bx:
+                    continue # 파란구슬의 시작위치와 겹치는 구간이 있다면, 이동 미반영. (마지막에 만나서 이동 1회 불가한 것을 반영한 효과)
+                else:
+                    rdist += 1
+            rny, rnx = ry + rdist*dy, rx + rdist*dx # 이동 결과 한번에 반영
+
+            # 기울였을 때 파란 구슬 위치
+            bdist = 0
+            for mv in range(1, N+M):
+                bny, bnx = by + mv*dy, bx + mv*dx
+
+                if arr[bny][bnx] == '#':
+                    break # 이동 종료
+                elif arr[bny][bnx] == 'O':
+                    flag = 2 # 파란 구슬 들어감
+                    break # 이동 종료
+                elif flag==0 and bny == ry and bnx == rx: # 파란/빨간 구슬 모두 들어가지 않고, 빨간 구슬의 시작지점을 파란 구슬이 지나간다면 이동 거리 1회 누락 반영
+                    continue # 이동 반영 없이
+                else:
+                    bdist += 1
+
+            if flag == 2: # 파란 구슬이 들어간 경우 실패
+                continue # 다음 방향
+
+            if flag == 1: # 빨간 구슬만 들어간 경우 성공
+                result = cnt
+                return # DFS 종료
+            bny, bnx = by + bdist*dy, bx + bdist*dx # 이동 결과 한번에 반영
+
+            if ry == rny and rx == rnx and by == bny and bx == bnx: # 처음 위치와 동일하면 제외
+                continue # 다음 방향
+            DFS(rny, rnx, bny, bnx, cnt+1)
 
 
 N, M = map(int, input().split())
-# board 에서 구슬위치를 바꿔주어야하므로 list 나눠서 받음
-board = []
-red = [-1, -1]
-blue = [-1, -1]
-for i in range(N):
-    tmp = list(input())
-    board.append(tmp)
-    for j in range(M):
-        if tmp[j] == 'B':
-            blue = [i, j]
-        elif tmp[j] == 'R':
-            red = [i, j]
+arr = [list(input()) for _ in range(N)]
 
-result, cnt = 0, 10
-backtrack(board, red, blue)
-if result == 0:
-    cnt = -1
-print(cnt)
+# R, B 위치 찾기
+for i in range(N):
+    for j in range(M):
+        if arr[i][j] == 'R':
+            ry, rx = i, j
+        elif arr[i][j] == 'B':
+            by, bx = i, j
+
+result = 11
+DFS(ry, rx, by, bx, 1)
+
+print(result if result != 11 else -1)

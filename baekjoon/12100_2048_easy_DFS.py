@@ -11,7 +11,7 @@
 # 이동은 가능할 때 까지
 # - * 이동방향에 따라, 먼저 계산하는 순서 다르게 적용(동쪽 이동은 오른쪽부터 계산)
 # 블록 합치기
-# - 이미 합쳐진 블록이면 합칠수 없음 -> 다른 상태값 -> 한턴에 한번만 합치기 -> 매턴마다 status 초기화
+# - 이미 합쳐진 블록이면 합칠수 없음 -> 다른 상태값 -> 한턴에 한번만 합치기 -> 매턴마다 visited 초기화
 # => ***** 이동, 합치기에 대한 정리 제일 중요
 # - 범위 내
 # - 0인지 아닌지
@@ -29,9 +29,10 @@
 
 
 # 내답, 느림
+
 from copy import deepcopy
 
-def change_loc(arr, status, y, x, dy, dx):
+def change_loc(arr, visited, y, x, dy, dx):
     ny, nx = y + dy, x + dx
     while True:
         # 외곽까지 이동
@@ -41,12 +42,11 @@ def change_loc(arr, status, y, x, dy, dx):
                 arr[ny][nx], arr[y][x] = arr[y][x], 0
                 ny, nx, y, x = ny + dy, nx + dx, ny, nx
             else: # 0 아니면
-                # 동일 숫자
-                if arr[ny][nx] == arr[y][x]:
+                if arr[ny][nx] == arr[y][x]: # 동일 숫자
                     # 합친적이 없으면
-                    if not status[ny][nx] and not status[y][x]:
+                    if not visited[ny][nx] and not visited[y][x]:
                         arr[ny][nx], arr[y][x] = arr[y][x] * 2, 0
-                        status[ny][nx] = True
+                        visited[ny][nx] = True
                         break
                     # 합친적이 하나라도 있으면, 이동 불가
                     else: break
@@ -54,7 +54,7 @@ def change_loc(arr, status, y, x, dy, dx):
                 else: break
         # 외곽 벗어나면
         else: break
-    return arr, status
+    return arr, visited
 
 def DFS(arr_init, cnt):
     global result
@@ -64,12 +64,10 @@ def DFS(arr_init, cnt):
         result = max(result, max(map(max, arr_init)))
         return
 
-    for case in moves:
-        # 이동 적용
-        dy, dx = case
+    for dy, dx in [(1,0), (-1,0), (0,1), (0,-1)]:
         arr = deepcopy(arr_init)
         if dy == 1:
-            flag1 = -1  # 방향에 따라 먼저 계산해야하는 순서가 바뀜
+            flag1 = -1  # 방향에 따라 먼저 계산 해야하는 순서가 바뀜
         else:
             flag1 = 1
         if dx == 1:
@@ -77,19 +75,17 @@ def DFS(arr_init, cnt):
         else:
             flag2 = 1
 
-        status = [[False] * N for _ in range(N)]
+        visited = [[False] * N for _ in range(N)]
 
         for i in list(range(N))[::flag1]:
             for j in list(range(N))[::flag2]:
                 if arr[i][j] != 0:
-                    arr, status = change_loc(arr, status, i, j, dy, dx)
+                    arr, visited = change_loc(arr, visited, i, j, dy, dx)
 
         DFS(deepcopy(arr), cnt+1)
 
 N = int(input())
 arr_init = [list(map(int, input().split())) for _ in range(N)]
-moves = [(1,0), (-1,0), (0,1), (0,-1)]
-status =[]
 result = 0
 
 DFS(arr_init, 0)
@@ -101,9 +97,9 @@ print(result)
 
 
 
-
 # 참고
 '''
+from copy import deepcopy
 def move(arr, dir):
     if dir == 0:  # 동쪽
         for i in range(N):
