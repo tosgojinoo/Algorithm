@@ -34,7 +34,7 @@ for i in range(L):
     X, C = input().split()
     dirDict[int(X)] = C
 
-# 동, 남, 서, 북
+# 동, 남, 서, 북 / 90도 회전 순서 반영
 dy = [0, 1, 0, -1]
 dx = [1, 0, -1, 0]
 
