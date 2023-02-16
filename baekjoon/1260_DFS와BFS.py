@@ -1,24 +1,22 @@
-# https://www.acmicpc.net/problem/1260
 from collections import deque
 
-def DFS(idx):
-    for i in arr[idx]:
-        if i<=N and visited[i]==0:
-            visited[i]=1
-            print(i, end=' ')
-            DFS(i)
+def DFS(node):
+    for nnode in arr[node]:
+        if nnode<=N and not visited[nnode]:
+            visited[nnode] = 1
+            memory.append(str(nnode))
+            DFS(nnode)
 
-def BFS(idx):
-    q = deque([idx])
-    # q.append(idx)
+def BFS(node):
+    queue = deque([node])
 
-    while q:
-        idx = q.popleft()
-        for i in arr[idx]:
-            if i<=N and visited[i]==0:
-                visited[i]=1
-                print(i, end=' ')
-                q.append(i)
+    while queue:
+        node = queue.popleft()
+        for nnode in arr[node]:
+            if nnode<=N and not visited[nnode]:
+                visited[nnode] = 1
+                memory.append(str(nnode))
+                queue.append(nnode)
 
 # 정점의 개수 N(1 ≤ N ≤ 1,000)
 # 간선의 개수 M(1 ≤ M ≤ 10,000)
@@ -27,19 +25,20 @@ N,M,V = map(int, input().split())
 
 arr = [[] for _ in range(N+1)]
 for _ in range(M):
-    idx, target = map(int, input().split())
-    arr[idx].append(target)
-    arr[target].append(idx)
+    node, nnode = map(int, input().split())
+    arr[node].append(nnode)
+    arr[nnode].append(node)
 
 arr = list(map(sorted, arr))
 
 visited = [0 for _ in range(N+1)]
-print(V, end=' ')
+memory = [str(V)]
 visited[V] = 1
 DFS(V)
-print()
+print(' '.join(memory))
 
 visited = [0 for _ in range(N+1)]
-print(V, end=' ')
+memory = [str(V)]
 visited[V] = 1
 BFS(V)
+print(' '.join(memory))

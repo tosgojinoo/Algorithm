@@ -1,16 +1,18 @@
-# H구멍, NxM 보드
-# DP memory
-#   - 해당 node에서 최대 이동거리 저장
-# visited와 DP memory는 무조건 분리
-# visited
-#   1) DFS 용
-#   2) 1step 처리 전후로 상태 변경 및 원복
-# 종료조건 종류
-#   1) visited가 True인 경우
-#   2) DP 값이 이미 있는 경우
-#   3) 범위 벗어날 경우
-#   4) 강제종료 조건 값일 경우
-# DP memory에 한번 값이 저장되면, 이후 overwrite은 금지
+'''
+H구멍, NxM 보드
+DP memory
+  - 해당 node에서 최대 이동거리 저장
+visited와 DP memory는 무조건 분리
+visited
+  1) DFS 용
+  2) 1step 처리 전후로 상태 변경 및 원복
+종료조건 종류
+  1) visited가 True인 경우
+  2) DP 값이 이미 있는 경우 -> cycle로 판단
+  3) 범위 벗어날 경우
+  4) 강제종료 조건 값일 경우
+DP memory에 한번 값이 저장되면, 이후 overwrite은 금지
+'''
 
 import sys
 sys.stdin.readline
@@ -18,12 +20,12 @@ sys.setrecursionlimit(10000)
 
 def DFS_DP(y, x):
     global state
-    if not(0<=y<N and 0<=x<M) or arr[y][x] == 'H': # 이동 종료 조건
-        return 0
+    if not(0<=y<N and 0<=x<M) or arr[y][x] == 'H': # 재귀 종료 조건
+        return 0 # 시작점
     if visited[y][x]: # 이동 종료 조건에 걸리지 않고, 방문한 곳에 재방문 시, 무한루프 flag ON
-        state = True
+        state = True # 'state' flag 와 'return -1'을 함께 하면 DFS 루프 밖까지 전달 가능
         return -1
-    if DP[y][x] != -1: # DP가 이미 update 된 경우 return. 이 조건 미포함시, 시간초과.
+    if DP[y][x] != -1: # DP가 이미 update 된 경우 return. 중복 update에 따른 시간초과 방지.
         return DP[y][x]
 
     visited[y][x] = True

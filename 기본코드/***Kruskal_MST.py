@@ -11,7 +11,7 @@
 '''
 
 
-def make_set(vertice): # vertice 초기화
+def make_set(vertice): # 부모 참조 table 초기화
     parent[vertice] = vertice
     rank[vertice] = 0
 
@@ -31,30 +31,28 @@ def union(vertice1, vertice2): # 두 정점 연결
             if rank[root1] == rank[root2]:
                 rank[root2] += 1
 
-def kruskal(graph):
+def kruskal():
     minimum_spanning_tree = []
 
     # 초기화
-    for vertice in graph['vertices']:
+    for vertice in arr['vertices']:
         make_set(vertice)
 
-    print(parent)
-    print(rank)
-
     # 간선 weight 기반 sorting
-    edges = graph['edges']
+    edges = arr['edges']
     edges.sort()
 
     # 간선 연결 (사이클 없게)
     for edge in edges:
         weight, vertice1, vertice2 = edge
+        # 부모가 같을 때 union 하면 싸이클 발생. 싸이클 미 발생시(부모가 다름), 집합에 포함
         if find(vertice1) != find(vertice2):
             union(vertice1, vertice2)
             minimum_spanning_tree.append(edge)
 
     return minimum_spanning_tree
 
-graph = {
+arr = {
     'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     'edges': [
         (7, 'A', 'B'),
@@ -84,4 +82,6 @@ graph = {
 
 parent = dict()
 rank = dict()
-print(kruskal(graph))
+print(kruskal())
+print(rank)
+print(parent)

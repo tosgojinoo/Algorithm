@@ -21,18 +21,16 @@ from collections import deque
 import sys
 input = sys.stdin.readline # 입력 신경쓰기
 
-def BFS(idx_root):
+def BFS():
     global result
-    q = deque([idx_root])
+    queue = deque([idx_root])
 
-    while q:
-        node = q.popleft()
-        if len(arr[node]) == 0: # 자식노드 조건
+    while queue:
+        node = queue.popleft()
+        if len(arr[node]) == 0: # 자식노드 조건. 루프 전 확인 필수. node1이 삭제되고 루트만 남았을 경우를 위해
             result += 1
-
-        for nnode in arr[node][::-1]: # pop 되면 다음 루프에 영향 주므로, 역순 입력
-            q.append(nnode)
-            arr[node].pop() # 뒤에서부터 pop
+        for nnode in arr[node]:
+            queue.append(nnode)
 
 N = int(input())
 arr_tmp = list(map(int, input().split()))
@@ -42,24 +40,21 @@ result = 0
 idx_root = -1
 
 for i in range(len(arr_tmp)):
-    if arr_tmp[i] == -1:
-        if i == D:
+    if arr_tmp[i] == -1: # root 면
+        if i == D: # root(0) 가 삭제 대상이면, 종료
             break
         else:
             idx_root = i
     # 삭제 노드 반영
-    elif arr_tmp[i] == D or i == D:
+    elif arr_tmp[i] == D or i == D: # 부모 node or 자신이 삭제 대상이면 무시
         continue
     else:
-        arr[arr_tmp[i]].append(i)
+        arr[arr_tmp[i]].append(i) # arr[node] = 자식 node 형태 재구성
 
-
-# print(arr)
-# print(idx_root)
 if idx_root == -1:
-    print(0)
+    print(0) # 0이 삭제 대상
 else:
-    BFS(idx_root)
+    BFS()
     print(result)
 # print(arr)
 

@@ -33,8 +33,8 @@
 6. touch_list = []
 7. 숫자&연산자 조합 생성
     - comb('')
-8. checked 생성
-    - checked = [M]*1000
+8. visited 생성
+    - visited = [M]*1000
     - 모든 결과값의 경우의 수를 열거 (0~999)
     - 해당 index에 최대 입력 가능 횟수 M을 초기 세팅
     - index를 계산값으로 가질 경우 현재 입력 횟수와 이미 저장된 입력 횟수를 비교하여, 작을 경우만 추가 DFS
@@ -82,23 +82,23 @@
             - 0 <= new_num <= 999 and
             - new_cnt < M and
             - new_cnt < result and
-            - new_cnt < checked[new_num]
-            a) checked에 new_cnt 저장
-                - checked[new_num] = new_cnt
+            - new_cnt < visited[new_num]
+            a) visited에 new_cnt 저장
+                - visited[new_num] = new_cnt
             b) DFS(str(new_num), new_cnt)
 '''
 
-def comb(num):
-    if len(num) == 3:
+def r_combination(num):
+    if len(num) == R:
         return
     for i in range(N):
         touch_list.append(num + str(can_touch[i]))
-        if num + str(can_touch[i]) != '0':
-            comb(num + str(can_touch[i]))
+        if num + str(can_touch[i]) != '0': # 첫 선택이 0이 아닐 경우만
+            r_combination(num + str(can_touch[i]))
 
 
 def calc(op, n1, n2, cnt):
-    cnt += len(n2) + 1
+    cnt += len(n2) + 1 # op cnt + n2 cnt
     if op == 1: return int(n1) + int(n2), cnt
     if op == 2: return int(n1) - int(n2), cnt
     if op == 3: return int(n1) * int(n2), cnt
@@ -110,35 +110,36 @@ def DFS(num, cnt):
 
     if int(num) == W:
         if num in touch_list:
-            result = min(result, cnt)
+            result = min(result, cnt) # DFS 진입하자 마자 바로인 case
         else:
-            result = min(result, cnt + 1)
+            result = min(result, cnt + 1) # '=' 추가 cnt
         return
 
     for choice_num in touch_list:
-        if choice_num == '0': continue
-        for choice_o in operators:
-            new_num, new_cnt = calc(choice_o, num, choice_num, cnt)
-            if 0 <= new_num <= 999 and new_cnt < M and new_cnt < result and new_cnt < checked[new_num]:
-                checked[new_num] = new_cnt
-                DFS(str(new_num), new_cnt)
+        if choice_num != '0':
+            for choice_op in operators:
+                nnum, ncnt = calc(choice_op, num, choice_num, cnt)
+                if 0 <= nnum <= 999 and ncnt < M and ncnt < result and ncnt < visited[nnum]: # 숫자 범위 제한, 입력 cnt 제한, 이전 cnt 대비 작음, 동일 숫자의 이전 cnt 대비 작음
+                    visited[nnum] = ncnt
+                    DFS(str(nnum), ncnt)
 
 
 T = int(input())
 for test_case in range(1, T + 1):
-    N, O, M = map(int, input().split())
+    N, O, M = map(int, input().split()) # 터치 가능한 숫자 개수, 터치 가능한 연산자 개수, 터치 가능 회수
 
     can_touch = list(map(int, input().split()))
     operators = list(map(int, input().split()))
-    W = int(input())
+    W = int(input()) # 원하는 숫자
 
     touch_list = []
-    comb('')
+    R = 3 # 최대 3자리 숫자
+    r_combination('') # touch_list에 case 저장
 
-    checked = [M] * 1000
-    result = 21
+    visited = [M] * 1000 # idx: W의 대상, M: 누적 터치 cnt 저장을 위한 초기값
+    result = 21 # 터치 최대 횟수 제한. 문제상 M의 조건.
     for num in touch_list:
-        DFS(num, len(num))
+        DFS(num, len(num)) # num, cnt
 
     if result == 21:
         result = -1
@@ -473,8 +474,8 @@ def DFS(n, cnt):
             continue
         for o in operators:
             n_n, n_c = calc(o, n, num, cnt)
-            if 0 <= n_n <= 999 and n_c < M and n_c < result and n_c < checked[n_n]:
-                checked[n_n] = n_c
+            if 0 <= n_n <= 999 and n_c < M and n_c < result and n_c < visited[n_n]:
+                visited[n_n] = n_c
                 DFS(str(n_n), n_c)
  
 T = int(input())
@@ -488,7 +489,7 @@ for test_case in range(1, T+1):
     touch_list = []
     comb('')
  
-    checked = [M]*1000
+    visited = [M]*1000
  
     result = 21
     for num in touch_list:
