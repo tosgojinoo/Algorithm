@@ -99,10 +99,14 @@ def r_combination(num):
 
 def calc(op, n1, n2, cnt):
     cnt += len(n2) + 1 # op cnt + n2 cnt
-    if op == 1: return int(n1) + int(n2), cnt
-    if op == 2: return int(n1) - int(n2), cnt
-    if op == 3: return int(n1) * int(n2), cnt
-    if op == 4: return int(n1) // int(n2), cnt
+    if op == 1:
+        return int(n1) + int(n2), cnt
+    if op == 2:
+        return int(n1) - int(n2), cnt
+    if op == 3:
+        return int(n1) * int(n2), cnt
+    if op == 4:
+        return int(n1) // int(n2), cnt
 
 
 def DFS(num, cnt):
