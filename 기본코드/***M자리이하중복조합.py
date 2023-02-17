@@ -2,10 +2,10 @@
 def r_combination(num):
     if len(num) == R:
         return
-    for i in range(len(can_touch)):
-        touch_list.append(num+str(can_touch[i]))
-        if num+str(can_touch[i]) != '0': # 추가 조건: 맨 처음이 '0'인 경우 재귀 제외
-            r_combination(num+str(can_touch[i]))
+    for nxt in can_touch:
+        touch_list.append(num+str(nxt))
+        if num+str(nxt) != '0': # 추가 조건: 맨 처음이 '0'인 경우 재귀 제외
+            r_combination(num+str(nxt))
 
 can_touch = [0, 1, 2, 3, 4, 7]
 touch_list = []

@@ -21,7 +21,8 @@ def DFS(y, x, num_of_chips):
         bit = sum(1<<i for i in range(H) if arr[i][x] == 1) # mem 영역 선정을 위한 bitmask 계산. 해당 열의 masking 상태에 대한 case 확인. bit 합으로 패턴 확인.
         if mem[bit][x] >= num_of_chips: # 이전 case 대비 cnt 적음. 무시.
             return
-        mem[bit][x] = num_of_chips # cnt 클 경우 저장.
+        else:
+            mem[bit][x] = num_of_chips # cnt 클 경우 저장.
     # 나머지, 중간 영역. 가능.
     if is_valid(y, x): # 칩 생산 가능 여부 확인
         set_chip(y, x, 1) # 칩 영역에 1 처리. visited 효과.

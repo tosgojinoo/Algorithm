@@ -1,29 +1,29 @@
 # 참고, 정답
-T = int(input())
-N = int(input())
-boxes = []
-for i in range(N):
-    box=list(map(int, input().split()))
-    boxes.append([box[0],box[1],box[2],i])
-    boxes.append([box[1],box[2],box[0],i])
-    boxes.append([box[2],box[0],box[1],i])
+for tc in range(int(input())):
+    N = int(input())
+    arr = []
+    for i in range(N):
+        box = list(map(int, input().split()))
+        # 3방향 경우의 수 모두 선택
+        arr.append([box[0], box[1], box[2], i])
+        arr.append([box[1], box[2], box[0], i])
+        arr.append([box[2], box[0], box[1], i])
 
-boxes=sorted(boxes,key=lambda x: x[0]*x[1])
+    arr = sorted(arr, key=lambda x: x[0]*x[1]) # 앞 두 숫자로 구성한 넓이 작은 순으로 정렬
+    DP = [box[2] for box in arr] # 높이 모음. 답까지 누적해 갈 것은 높이.
+    visited = [[box[3]] for box in arr] # 선택한 이력 관리
 
-height=[box[2] for box in boxes]
-visit=[[box[3]] for box in boxes]
+    for i in range(3*N):
+        for j in range(i-1, -1, -1): # i보다 작은 수 j. i==0은 자동 제외됨.
+            if arr[i][3] in visited[j]: # 자기자신 or 이전에 선택된 경우, 무시
+                continue
+            if (arr[i][0] >= arr[j][0] and arr[i][1] >= arr[j][1]) or (arr[i][0] >= arr[j][1] and arr[i][1] >= arr[j][0]): # i박스가 j박스 대비, 가로/세로 이상 or 가로<->세로 교환 후 비교도 이상
+                if DP[i] < DP[j] + arr[i][2]: # i단일 + (j까지의 누적) 이 (i까지의 누적) 보다 클 경우
+                    DP[i] = DP[j] + arr[i][2] # 추가
+                    visited[i] = visited[j] + [arr[i][3]] # 선택된 경우의 수 모두 저장
 
-for i in range(3*N):
-    for j in range(i-1,-1,-1):
-        if boxes[i][3] in visit[j]:
-            continue
-        if (boxes[i][0] >= boxes[j][0] and boxes[i][1] >= boxes[j][1]) or (boxes[i][0] >= boxes[j][1] and boxes[i][1] >= boxes[j][0]):
-            if height[i] < boxes[i][2] + height[j]:
-                height[i]=boxes[i][2] + height[j]
-                visit[i]= visit[j]+ [boxes[i][3]]
-
-answer=max(height)
-print(f'{answer}')
+    answer = max(DP)
+    print(f'#{tc+1} {answer}')
 
 
 

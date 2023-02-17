@@ -91,10 +91,10 @@
 def r_combination(num):
     if len(num) == R:
         return
-    for i in range(N):
-        touch_list.append(num + str(can_touch[i]))
-        if num + str(can_touch[i]) != '0': # 첫 선택이 0이 아닐 경우만
-            r_combination(num + str(can_touch[i]))
+    for nxt in can_touch:
+        touch_list.append(num + str(nxt))
+        if num + str(nxt) != '0': # 첫 선택이 0이 아닐 경우만
+            r_combination(num + str(nxt))
 
 
 def calc(op, n1, n2, cnt):
@@ -115,7 +115,7 @@ def DFS(num, cnt):
             result = min(result, cnt + 1) # '=' 추가 cnt
         return
 
-    for choice_num in touch_list:
+    for choice_num in touch_list: # 루프 횟수 줄이기 위해 op 아닌 num 부터 선택
         if choice_num != '0':
             for choice_op in operators:
                 nnum, ncnt = calc(choice_op, num, choice_num, cnt)

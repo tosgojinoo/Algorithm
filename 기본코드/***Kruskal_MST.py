@@ -10,19 +10,14 @@
 3. 사이클을 형성하는 경우 간선을 포함하지 않는다.
 '''
 
+def find_parent(node): # 해당 node의 최상위 정점 찾기
+    if parent[node] != node:
+        parent[node] = find_parent(parent[node])
+    return parent[node]
 
-def make_set(vertice): # 부모 참조 table 초기화
-    parent[vertice] = vertice
-    rank[vertice] = 0
-
-def find(vertice): # 해당 vertice의 최상위 정점 찾기
-    if parent[vertice] != vertice:
-        parent[vertice] = find(parent[vertice])
-    return parent[vertice]
-
-def union(vertice1, vertice2): # 두 정점 연결
-    root1 = find(vertice1)
-    root2 = find(vertice2)
+def union(node1, node2): # 두 정점 연결
+    root1 = find_parent(node1)
+    root2 = find_parent(node2)
     if root1 != root2:
         if rank[root1] > rank[root2]:
             parent[root2] = root1
@@ -32,11 +27,7 @@ def union(vertice1, vertice2): # 두 정점 연결
                 rank[root2] += 1
 
 def kruskal():
-    minimum_spanning_tree = []
-
-    # 초기화
-    for vertice in arr['vertices']:
-        make_set(vertice)
+    MST = [] # minimum_spanning_tree
 
     # 간선 weight 기반 sorting
     edges = arr['edges']
@@ -44,16 +35,16 @@ def kruskal():
 
     # 간선 연결 (사이클 없게)
     for edge in edges:
-        weight, vertice1, vertice2 = edge
+        weight, node1, node2 = edge
         # 부모가 같을 때 union 하면 싸이클 발생. 싸이클 미 발생시(부모가 다름), 집합에 포함
-        if find(vertice1) != find(vertice2):
-            union(vertice1, vertice2)
-            minimum_spanning_tree.append(edge)
+        if find_parent(node1) != find_parent(node2):
+            union(node1, node2)
+            MST.append(edge)
 
-    return minimum_spanning_tree
+    return MST
 
 arr = {
-    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'nodes': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     'edges': [
         (7, 'A', 'B'),
         (5, 'A', 'D'),
@@ -82,6 +73,11 @@ arr = {
 
 parent = dict()
 rank = dict()
+# 부모 참조 table 초기화
+for node in arr['nodes']:
+    parent[node] = node
+    rank[node] = 0
+
 print(kruskal())
 print(rank)
 print(parent)
