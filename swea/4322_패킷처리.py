@@ -1,25 +1,30 @@
 def DFS(packet_idx):
     # DFS level 제한
-    if packet_idx == len(arr): # 전체 packet 길이와 현 packet index가 동일할 경우, 더이상 계산 x
+    if packet_idx == len(arr): # 이미 packet 처리 완료 상태
         return True
-    # 대상 선택. for 편리함.
+
+    # 세팅1: 대상 선택. for 편리함.
     packet = arr[packet_idx]
 
+    # 세팅2: delay 계산
     # 해당 packet 진입 당시, cpu 잔량과의 차이로 delay 계산
-    for i in range(len(cpu_height)): # cpu 종료시간을 일일히 비교
+    for i in range(cpu_num): # cpu 종료시간을 일일히 비교
         if cpu_height[i] > packet[0]: # packet 입력 시간이 cpu 종료 시간 보다 빠를 경우 == 대기가 필요할 경우
             delay[i] = cpu_height[i] - packet[0] # 대기 시간 저장
 
+    # 세팅3: visited 계산
     # packet_idx와 delay 상태 배열의 조합을 visited로 처리. list가 아닌 dict인 이유는, 시간복잡성 감소 위해.
     key = tuple([packet_idx] + sorted(delay))
     if key in visited:
         return False
     visited[key] = True
 
-    # 검색 조건
-    for i in range(len(cpu_height)):
-        # 초기값
+    # DFS
+    # 몇번 cpu_num에서 처리할 지 루프 처리
+    for i in range(cpu_num):
+        # 초기값. 해당 cpu_num에서 처리 할수도, 안 할수도 있기 때문.
         tmp = cpu_height[i]
+        # delay 처리 방식과 유사하게 다시 한번 확인
         if cpu_height[i] > packet[0]: # 대기. packet 입력 시간이 cpu 종료 시간 보다 늦을 경우.
             if cpu_height[i] - packet[0] + packet[1] <= 10: # 제한 조건: 대기시간 + 신규 packet의 처리 종료 시간이 최종 종료 제한 시간 이하일 경우
                 cpu_height[i] += packet[1] # 대기 후 처리 완료한 시간을 cpu 종료 시간에 입력
@@ -28,9 +33,10 @@ def DFS(packet_idx):
         else:
             cpu_height[i] = packet[0] + packet[1]  # 대기 불필. 바로 cpu 종료 시간에 추가
 
+        # 연달아 모든 packet 확인
         if DFS(packet_idx + 1): # 다음 패킷에 대해 DFS 결과가 True일 경우
             return True
-        # backtracking 후 초기값 복원
+        # 이번 cpu_num에서는 처리 못했기 때문에, 원복 후 다음 cpu_num 이동
         cpu_height[i] = tmp  # 처리 못했을 경우 원복
     return False
 
@@ -50,7 +56,7 @@ for tc in range(1, T + 1):
         # DFS 시작
         if DFS(0):  # DFS 전체 검색 후 True 라면 저장
             answer = cpu_num
-            break # 자동으로 최소값 채ㄹ
+            break # 자동으로 최소값 채택
 
     print(f'#{tc} {answer}')
 
