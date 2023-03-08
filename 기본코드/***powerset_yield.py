@@ -7,7 +7,6 @@ def powerset(arr):
             yield [arr[0]] + nxt
             yield nxt
 
-x = powerset([1,2,3,4,5])
-for i in x:
+for i in powerset([1,2,3,4,5]):
     if len(i) <= 3:
         print(i)

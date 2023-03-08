@@ -32,6 +32,7 @@ def kruskal():
     # 간선 weight 기반 sorting
     edges = arr['edges']
     edges.sort()
+    cost = 0
 
     # 간선 연결 (사이클 없게)
     for edge in edges:
@@ -40,8 +41,9 @@ def kruskal():
         if find_parent(node1) != find_parent(node2):
             union(node1, node2)
             MST.append(edge)
+            cost += weight
 
-    return MST
+    return MST, cost
 
 arr = {
     'nodes': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
