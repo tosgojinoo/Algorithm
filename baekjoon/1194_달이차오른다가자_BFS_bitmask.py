@@ -88,12 +88,12 @@ def BFS():
                     queue.append((nx, ny, cnt+1, key))
                 elif arr[nx][ny] == "1": # 출구
                     return cnt+1
-                elif arr[nx][ny] in "ABCDEF" and key & 1 << (ord(arr[nx][ny]) - 65): # 문, 보유키와 맞는지.
+                elif arr[nx][ny] in "ABCDEF" and key & 1 << (ord(arr[nx][ny]) - ord('A')): # 문, 보유키와 맞는지.
                     visited[nx][ny][key] = True
                     queue.append((nx, ny, cnt+1, key))
-                elif arr[nx][ny] in "abcdef" and not visited[nx][ny][key|(1 << ord(arr[nx][ny]) - 97)]: # 키, 동일 키 상태로 미방문.
-                    visited[nx][ny][key | (1 << ord(arr[nx][ny]) - 97)] = True
-                    queue.append((nx, ny, cnt+1, key | (1 << ord(arr[nx][ny]) - 97)))
+                elif arr[nx][ny] in "abcdef" and not visited[nx][ny][key|(1 << ord(arr[nx][ny]) - ord('a'))]: # 키, 동일 키 상태로 미방문.
+                    visited[nx][ny][key | (1 << ord(arr[nx][ny]) - ord('a'))] = True
+                    queue.append((nx, ny, cnt+1, key | (1 << ord(arr[nx][ny]) - ord('a'))))
     return -1
 
 

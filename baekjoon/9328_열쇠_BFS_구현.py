@@ -8,7 +8,7 @@
 1. '.'는 빈 공간
 2. '*'는 벽을 나타내며, 상근이는 벽을 통과할 수 없음
 3. '$'는 상근이가 훔쳐야하는 문서
-대문자는 문 -> ord(), chr() 활용
+대문자는 문 -> isupper(), upper(), islower(), lower()
 소문자는 열쇠
 마지막 줄에는 상근이가 이미 가지고 있는 열쇠
 열쇠를 하나도 가지고 있지 않는 경우에는 "0"
@@ -44,7 +44,7 @@
         - nxy += dxy
         - 제한 조건: 범위 밖, 벽, 이미 방문했다면 무시
         - if 대문자 문:
-            - chr(ord(+32)) not in key_list 무시
+            - 문의 키 not in key_list 무시
         - elif 소문자 키:
             - 키 not in key_list
                 - 키 추가
@@ -78,10 +78,10 @@ def BFS():
             if not (0<=nx<W+2) or not (0<=ny<H+2) or arr[ny][nx] == '*' or visited[ny][nx]: # 제한 조건: 범위 밖, 벽, 이미 방문했다면 무시
                 continue
 
-            if 'A' <= arr[ny][nx] <= 'Z':  # 대문자(문)
-                if chr(ord(arr[ny][nx]) + 32) not in key:  # 해당 문을 열 수있는 키가 없다면, 무시
+            if arr[ny][nx].isupper():  # 대문자(문)
+                if arr[ny][nx].lower() not in key: # 해당 문을 열 수있는 키가 없다면, 무시
                     continue
-            elif 'a' <= arr[ny][nx] <= 'z':  # 소문자(키)
+            elif arr[ny][nx].islower():  # 소문자(키)
                 if arr[ny][nx] not in key:  # 아직 키에 없다면
                     key.add(arr[ny][nx])  # 키 추가
                     visited = [[False] * (W + 2) for _ in range(H + 2)]  # 키 찾으면, 새롭게 방문 체크 초기화

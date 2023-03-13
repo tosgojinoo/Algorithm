@@ -32,9 +32,12 @@ string.lstrip()
 string.replace("기존 문자열","새 문자열")
 
 # [list 관련]
-list.insert(index, data) # index 자리에 data 삽입
+list.insert(index, value) # index 자리에 value 삽입
 list.pop() # 가장 끝에 있는 요소 제거
 list.pop(idx)
+list.remove(value)
+list.count(value)
 
 # [set 관련]
 set1.add(set2)
+

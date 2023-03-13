@@ -1,22 +1,88 @@
 '''
-[양분 기준]
-봄(소모) - 여름(추가) - 가을(-) - 겨울(추가)
-[순서 변경]
-겨울 - 봄 - 여름 - 가을
+[설명]
+N×N 크기
+(r, c), r과 c는 1부터 시작 -> idx -1 shift
+모든 칸에 대해서 양분 조사
+처음에 양분은 모든 칸에 5만큼 -> init
+M개의 나무
+같은 1×1 크기의 칸에 여러 개의 나무가 심기 가능
+- 사계절 과정 반복
+    - 봄
+        - 나무가 자신의 나이만큼 양분을 먹음 -> 양분 - 나이
+        - 나이가 1 증가 -> 나이 ++
+        - 나무가 있는 1×1 크기의 칸에 있는 양분만 먹을 수 있음
+        - 나이가 어린 나무부터 양분 먹음 -> 어린 나이부터 오름차순
+        - 양분이 부족해 자신의 나이만큼 양분을 먹을 수 없는 나무는 양분을 먹지 못하고 즉시 죽음 -> if 나이 > 양분: 죽음
+    - 여름
+        - 봄에 죽은 나무가 양분으로 변함 -> 양분으로 추가
+        - 각각의 죽은 나무마다 나이를 2로 나눈 값이 나무가 있던 칸에 양분으로 추가 -> 죽은 나무 나이 //2
+        - 소수점 아래 생략
+    - 가을
+        - 번식
+        - 번식하는 나무는 나이가 5의 배수 -> 나이%5 == 0
+        - 인접한 8개의 칸에 나이가 1인 나무가 생김
+        - 인접한 칸
+            - (r-1, c-1), (r-1, c), (r-1, c+1), (r, c-1), (r, c+1), (r+1, c-1), (r+1, c), (r+1, c+1) -> 주위 8 방향
+        - 땅을 벗어나는 칸에는 나무가 생기지 않음 -> 범위 밖 무시
+    - 겨울
+        - 양분 추가
+        - 추가 양분의 양은 A[r][c] -> arr_source 추가 관리
+        - 입력으로 주어짐
+
+[문제]
+K년이 지난 후 살아남은 나무의 수를 출력 -> if cnt ~ K:
+'''
+'''
+[알고리즘]
+- tree 정보
+    - {나무정보 (x, y, 나무 나이) : 나무개수(초기값 1)}
+    -
+
+- 4계절 한번에 계산
+- 양분 기준
+    - 봄(소모) > 여름(추가) > 가을(-) > 겨울(추가)
+    - 순서 변경: 겨울 > 봄 > 여름 > 가을
+- solve()
+    - 여름에 죽어서 변한 양분은 그 다음해 봄에 소비
+    - 그러므로, 어린 나무 순으로, 나무별 4계절을 우선 계산
+    - for sorted({x, y, 나이}.items, key=lambda x[0][2])
+        - 양분의 합 source를 따로 변수 저장하지 않으면 시간 초과 발생
+        - 겨울(양분추가) > 봄 > 여름(사망) > 가을 > 여름(양분추가) 순서
+        - 4계절 조건에 따라 계산
+        - add_tree()
+- add_tree()
+    - tree_list에 추가 
+- print(sum(tree.values()))    
+'''
+'''
 [구조]
-for 나무 정보:
-    [겨울] 조건
-    if [봄] 조건
-        양분 소모
-    if [가을] 조건
-        번식
-        
-for [여름] (정산된) 죽은 나무 정보:
-    양분화
+- arr, arr_source 저장
+- tree dict() 저장
+- solve
+    - for 나무 정보, 나이 어린순 오름차순:
+        - [겨울] source = arr + arr_source
+        - if [봄] 양분 조건, 나이
+            - if 양분 조건, 개수:
+                - 양분 소모 or not
+            - if [가을] 나이 조건
+                - 번식 > add_tree(new_tree)
+        - else 
+            - [여름] 사망 > add_tree(dead_tree) 
+
+    - for [여름] (정산된) dead_tree:
+        - 양분화
+    - return new_tee
+- print(sum(tree.values()))    
+'''
+
+
+'''
+
+
+
 '''
 
 import sys
-from collections import defaultdict
 input = sys.stdin.readline
 
 def add_tree(y, x, age, cnt, tree_list):
@@ -57,8 +123,8 @@ def solve(tree, k):
 direction = [(-1,-1), (-1,0), (-1,1), (0,-1), (0,1), (1,-1), (1,0), (1,1)] # 8방향.
 n, m, k = map(int, input().split()) # 배열 크기, 나무 정보 개수, 년수
 arr = [[5 for _ in range(n)] for _ in range(n)] # 양분. 초기값 5.
-add_source = [list(map(int,input().split())) for _ in range(n)] # 추가 양분값
-tree = {tuple(map(int,input().split())): 1 for _ in range(m)} # {나무정보 (x, y, 나무 나이) : 나무개수(초기값 1)}
+add_source = [list(map(int, input().split())) for _ in range(n)] # 추가 양분값
+tree = {tuple(map(int, input().split())): 1 for _ in range(m)} # {나무정보 (x, y, 나무 나이) : 나무개수(초기값 1)}
 
 for i in range(k): # 매해 결과 계산
     tree = solve(tree, i)

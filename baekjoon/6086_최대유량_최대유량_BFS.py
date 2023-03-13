@@ -1,5 +1,5 @@
 # 'A'~'Z' => 0~25, 'a'~'z' => 26~51
-h = lambda x: ord(x) - ord('A') if x <= 'Z' else ord(x) - ord('a') + 26
+h = lambda x: ord(x) - ord('A') if x.isupper() else ord(x) - ord('a') + 26
 
 def make_flow(S, T, path):
     c = 10**9
