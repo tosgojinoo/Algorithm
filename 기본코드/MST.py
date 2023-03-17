@@ -1,18 +1,15 @@
 # 특정 원소가 속한 집합을 찾기
-def find_parent(parent, x):
+def find_parent(x):
     # 루트 노드가 아니라면, 루트 노드를 찾을 때까지 재귀적으로 호출
     if parent[x] != x:
-        parent[x] = find_parent(parent, parent[x])
+        parent[x] = find_parent(parent[x])
     return parent[x]
 
 # 두 원소가 속한 집합을 합치기
-def union_parent(parent, a, b):
-    a = find_parent(parent, a)
-    b = find_parent(parent, b)
-    if a < b:
-        parent[b] = a
-    else:
-        parent[a] = b
+def union_parent(a, b):
+    root1 = find_parent(a)
+    root2 = find_parent(b)
+    parent[max(root1, root2)] = min(root1, root2)
 
 T = int(input())
 for tc in range(1, T+1):

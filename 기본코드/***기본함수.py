@@ -35,9 +35,23 @@ string.replace("기존 문자열","새 문자열")
 list.insert(index, value) # index 자리에 value 삽입
 list.pop() # 가장 끝에 있는 요소 제거
 list.pop(idx)
-list.remove(value)
+list.remove(value) # value == tuple() 도 가능
 list.count(value)
+list.index(value)
 
 # [set 관련]
 set1.add(set2)
 
+# [입력 형태]
+## 개별 입력
+- map(int, input().split())
+## 123456789
+- [list(map(int, list(input()))) for _ in range(N)]
+## 1 100 2 50 60 3 5 6 7 8
+- [list(map(int, input().split())) for _ in range(N)]
+## #..B#
+- [list(input().strip()) for _ in range(N)]
+## padding
+- ['.' + input() + '.' for _ in range(H)]
+## 뺀 값이 음수일 경우 0처리
+- [i-B if i-B >=0 else 0 for i in arr]
