@@ -32,7 +32,7 @@ M×N 크기의 보드
         - 좌표 패턴 조건
             - B/W 상태에 따라 cnt 추가
     - result에 cnt 저장
-- min(resilt) 출력  
+- min(result) 출력  
 '''
 N, M = map(int, input().split())
 result = []
