@@ -6,7 +6,8 @@
 [DFS]
 - 그룹 번호 매기기
   - visited 에 그룹 idx 표기
-
+- 경우의 수
+  - DFS or Combinations
 
 
 [BFS]
@@ -53,6 +54,7 @@
     - 거리 == weight
 
 
+
 [memory]
 - 필요한 경우 모든 케이스에 대해 관리
 - dict 의 경우 tuple 을 key 적용 가능
@@ -80,8 +82,10 @@
 [visited]
 - 상태차원
   - 빨간/파란 구슬 위치 
-  - rx x ry x bx x by
+    - rx x ry x bx x by
     - [[[[False] * M for _ in range(N)] for _ in range(M)] for _ in range(N)] 
+  - 빠르게/느리게 도착, 느리게/빠르게 출발
+    - [[INF] * (N+1) for _ in range(2)]
 - visited + cnt 방식
 
 
@@ -187,6 +191,12 @@
   - 거리
   - 비용
 
+- 사계절/스테이지
+  - 기준 또는 영향을 이어가는 변수 확인
+  - 계산 순서 배치 변경
+    - 예) 양분
+      - 봄(소모) > 여름(추가) > 가을(-) > 겨울(추가)
+      - 순서 변경: 겨울 > 봄 > 여름 > 가을
 
 [while]
 - 방향 * 속도 이동일 경우
