@@ -6,7 +6,7 @@ def r_combination(num):
     if len(num) == R:
         return
     for nxt in can_touch:
-        touch_list.append(num+str(nxt))
+        touch_list.append(list(map(int, num+str(nxt))))
         if num+str(nxt) != '0': # 추가 조건: 맨 처음이 '0'인 경우 재귀 제외
             r_combination(num+str(nxt))
 

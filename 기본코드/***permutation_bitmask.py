@@ -1,21 +1,9 @@
-def permutations():
-    global running
-    global characters
-    global bitmask
-    if len(running) == R:
-        print(''.join(running))
-    else:
-        for i in range(len(characters)):
-            if ((bitmask >> i) & 1) == 0:
-                bitmask |= 1 << i
-                running.append(characters[i])
-                permutations()
-                bitmask ^= 1 << i
-                running.pop()
+def permutation(arr):
+    N = len(arr)
+    for i in range(1<<N):
+        s = bin(i)[2:]
+        s = '0' * (N-len(s)) + s
+        print(list(map(int, list(s))))
 
-raw = '12345'
-characters = list(raw)
-R = 3
-running = []
-bitmask = 0
-permutations()
+arr = list(range(5))
+permutation(arr)
