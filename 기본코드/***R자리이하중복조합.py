@@ -1,3 +1,6 @@
+'''
+itertools를 제외하고, 단순 반복문이 가장 빠름
+'''
 # 1
 def r_combination(num):
     if len(num) == R:
