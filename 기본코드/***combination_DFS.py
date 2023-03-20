@@ -1,7 +1,7 @@
 # 1
 def dfs_comb1(now, beginWith): # now: 정해진 지점, beginWith: 이하 분석 지점
     if now == R:
-        result.append(picked.copy())
+        result.append(picked[:])
         return
     for i in range(beginWith, len(arr)): # now >= beginWith
         # 선정

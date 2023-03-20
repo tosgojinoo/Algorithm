@@ -18,10 +18,7 @@ def BFS(node):
                 memory.append(str(nnode))
                 queue.append(nnode)
 
-# 정점의 개수 N(1 ≤ N ≤ 1,000)
-# 간선의 개수 M(1 ≤ M ≤ 10,000)
-# 탐색을 시작할 정점의 번호 V
-N, M, V = 5, 5, 3
+N, M, V = 5, 5, 3 # 정점 N, 간선 M, 탐색 시작 정점 V
 
 node_info = [[5, 4],
              [5, 2],
@@ -30,7 +27,7 @@ node_info = [[5, 4],
              [3, 1]]
 
 arr = [[] for _ in range(N+1)]
-for i in range(M):
+for i in range(M): # 양방향
     node, nnode = node_info[i]
     arr[node].append(nnode)
     arr[nnode].append(node)

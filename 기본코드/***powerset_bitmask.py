@@ -3,25 +3,22 @@
 따라서 n이 큰 경우에는 시간초과가 나지 않도록 적절히 가지치기 필요함
 N < 20 에서만 사용
 '''
-def powerSet(items):
-    N = len(items)
-    outer_combo = []
-    # enumerate the 2**N possible combinations
-    for i in range(2**N):
-        inner_combo = []
-        for j in range(N):
-            # test bit jth of integer i
-            if (i >> j) % 2 == 1:
-                inner_combo.append(items[j])
+def powerset(arr):
+    N = len(arr)
+    for flags in range(2**N):
+        subarray = []
+        for idx in range(N):
+            if (flags >> idx) % 2 == 1:
+                # print(f'bin(flags): {bin(flags)}, bin((flags >> idx)): {bin((flags >> idx))}')
+                subarray += [arr[idx]]
         # options
-        # if len(inner_combo) > 2:
+        # if len(subarray) > 2:
 
-        outer_combo.append(inner_combo)
-    return outer_combo
+        total_array.append(subarray)
 
-
-a = list(range(20))
-print(powerSet(a))
-
+total_array = []
+a = list(range(10))
+powerset(a)
+print(total_array)
 
 

@@ -9,9 +9,9 @@ def permutation(subset):
         nsubset = subset + [nxt]
         permutation(nsubset)
 
-can_touch = list(range(10))
+can_touch = list(range(3))
 touch_list = []
 R = 3 # 3번 선택
-permutation(touch_list)
+permutation([])
 print(touch_list)
 print(len(touch_list))
