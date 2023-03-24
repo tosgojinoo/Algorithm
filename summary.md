@@ -1,16 +1,42 @@
-[Brute force]
+# [문제 접근]
++ N의 범위 확인
+  + N <= 20
+    + DFS, yield
+  + N > 20
+    + DP
++ 최장/최단
+  + 최소 결과: BFS
+  + 최대 넓이: BFS
+  + 최대 결과물: BFS + visited 갱신
++ 우선순위
+  + heapq
++ 패턴
+  + 점화식 -> DP
++ 그래프
+  + 양방향/무방향
+    + Dijkstra
+      + 임의의 두점 간 최소 거리
+      + node 중심
+    + Kruskal
+      + MST 최소 신장 트리 
+      + edge 중심
+
+
+# [Brute force]
 - 시작점 조건이 없어, 특정할 수 없음
 - 재방문 x -> 아래/오른쪽 이동 경우만 계산 -> BFS/DFS 아니고 Brute force 
 - 범위 탐색 -> 교환 -> 계산 -> 원복 (visited 미사용)
 
-[DFS]
+
+# [DFS]
 - 그룹 번호 매기기
   - visited 에 그룹 idx 표기
 - 경우의 수
   - DFS or Combinations
+  - N <=20 일때만 계산 가능하며, 그 이상은 DP 처리 필수 (bitmask 방식 불가) 
 
 
-[BFS]
+# [BFS]
 - queue
   - 기본적으로 deque 사용
     - queue.popleft()
@@ -21,7 +47,7 @@
   - while 루프에 사용되는 queue 외에, 정산시 계산 이력 활용 용도로 추가 deque 사용
   - 굳이 단일 queue 사용하지 말기
 - 0-1 BFS
-  - 가중치가 유리한 경우를 먼저 삽입(appenleft), 일반은 뒤에 삽입(append) 하는 BFS
+  - 가중치가 유리한 경우를 먼저 삽입(appendleft), 일반은 뒤에 삽입(append) 하는 BFS
 - 최소 문열기(BOJ 9376)
   - visited
     - init -1
@@ -35,16 +61,16 @@
   - "map 탐색 및 최대 결과물 확보" 의 경우, "BFS + (조건 변화시)visited 초기화" 방식 적용
 
 
-[Dijkstra]
+# [Dijkstra]
 - 양방향(무방향) 그래프
 - 모든 node를 갈 필요 없이, 최소 비용(시간)으로 목표 지점까지의 이동
 - heapq
-  - heapq.heappush(queue, [weight, 그외 변수들])
+  - heapq.heappush(queue, (weight, 그외 변수들))
   - while queue:
     - heapq.heappop(queue)
 
 
-[Kruskal]
+# [Kruskal]
 - MST 계산
 - edges 계산
   - 그룹(or node) 간 거리 계산 필요시
@@ -53,9 +79,8 @@
     - (dist, country_idx, visited[ny][nx]) 
     - 거리 == weight
 
-
-
-[memory]
+  
+# [memory]
 - 필요한 경우 모든 케이스에 대해 관리
 - dict 의 경우 tuple 을 key 적용 가능
 - idx 활용
@@ -77,20 +102,23 @@
   - 필요 조건 만족 시키기 위한 누적값 기준이 있을 경우(길이, 무게, 가격, 연료)
   - buffer에 쌓고, 해소가 필요한 시점에서 해소 여부 확인
 
-
-
-[visited]
+  
+# [visited]
 - 상태차원
   - 빨간/파란 구슬 위치 
     - rx x ry x bx x by
     - [[[[False] * M for _ in range(N)] for _ in range(M)] for _ in range(N)] 
   - 빠르게/느리게 도착, 느리게/빠르게 출발
-    - [[INF] * (N+1) for _ in range(2)]
+    - [[INF] * (N+1) for _ in range(빠르게/느리게 == 2)]
 - visited + cnt 방식
+- visited + cnt + 상태차원
 
 
+# [DP]
+- N > 20인 경우의 수 계산은 무조건 DP 처리
 
-[방향]
+
+# [방향]
 - 순서
   - 문제에서 정해진 순서 따르기
 - dxy +/- 90도 회전
@@ -108,7 +136,7 @@
   - BFS/DFS 탐색 시, 다음 좌표 선정에 우선순위 있을 경우
   - "for dxy in direction"에서 우선순위를 감안한 direction 구성
 - arr +90도
-  - transpose
+  - transpose > -x
   - list(*zip(*arr))
 - arr -90도
   - transpose > reverse
@@ -121,7 +149,7 @@
   - arr[i + (s -1 -x)][j + y] -> arr_new[i + y][j + x]
 
 
-[패턴]
+# [패턴]
 - 체스판
   - (ny + nx) % 2
     - 기준점부터 짝수 거리 지점은 색 동일. 홀수 거리는 반대
@@ -149,7 +177,7 @@
     - [i//2 for i in range(2, N*2)]
   - shell 방향과 다른 패턴 조합될 경우
     - 1D로 변환 구성 활용
-  - shell + vertical/horizontal 교차점 계산
+  - shell + 방향전환점 계산
     - shell개수 = N//2. 4방 번걸아가며 계산
     - (북 -> 서), (서 -> 남) 전환시 증분 +1씩 복합 증분 
 
@@ -185,7 +213,7 @@
   - 한칸씩 이동 적용 x
   - 열별 탐색 후 가장 높은 행값 리턴 함수 구성
     - '리턴값 + 1' 에 블록 위치
-  - 
+
 - weight
   - 연료: 단가 계산, 적용
   - 거리
@@ -198,12 +226,13 @@
       - 봄(소모) > 여름(추가) > 가을(-) > 겨울(추가)
       - 순서 변경: 겨울 > 봄 > 여름 > 가을
 
-[while]
+
+# [while]
 - 방향 * 속도 이동일 경우
   - 제한(충돌) 조건 전까지 적용
 
 
-[arr]
+# [arr]
 - 중력 적용
   - for 탐색 역순
 - 4방 끝단이 반대편과 이어지는 주기 회전 방식
@@ -216,6 +245,6 @@
   - [i-B if i-B >=0 else 0 for i in arr]
 
 
-[출력]
+# [출력]
 - 최대 자리수 맞춰 이쁘게 출력
   - print(f"%{print_len}d" % spiral(i, j), end = " ")

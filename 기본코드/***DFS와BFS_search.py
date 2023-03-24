@@ -38,10 +38,10 @@ visited = [0 for _ in range(N+1)]
 memory = [str(V)]
 visited[V] = 1
 DFS(V)
-print(' '.join(memory))
+print(memory)
 
 visited = [0 for _ in range(N+1)]
 memory = [str(V)]
 visited[V] = 1
 BFS(V)
-print(' '.join(memory))
+print(memory)

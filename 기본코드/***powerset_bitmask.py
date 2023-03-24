@@ -17,8 +17,9 @@ def powerset(arr):
         total_array.append(subarray)
 
 total_array = []
-a = list(range(10))
+a = list(range(1, 6))
 powerset(a)
 print(total_array)
+print(len(total_array))
 
 

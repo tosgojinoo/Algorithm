@@ -14,7 +14,7 @@ from collections import deque
 
 MAX = 999999999999
 
-def Dijkstra(arr, N, M):
+def Dijkstra():
     DP = [[MAX] * (M + 1) for _ in range(N)]
     DP[0][0] = 0
 
@@ -26,21 +26,23 @@ def Dijkstra(arr, N, M):
             continue
 
         for nnode, ncost, ndist in arr[node]:
-            new_dist = dist + ndist
-            new_cost = cost + ncost
-            if new_cost > M:
+            cum_dist = dist + ndist
+            cum_cost = cost + ncost
+            if cum_cost > M:
                 continue  # 예산 초과
-            if DP[nnode][new_cost] <= new_dist:
+            if DP[nnode][cum_cost] <= cum_dist:
                 continue  # 최소 거리 아님
-            if DP[nnode][0] > new_dist:
-                DP[nnode][0] = new_dist  # 최소값 저장
-            for i in range(new_cost, M + 1):
-                if DP[nnode][i] > new_dist:
-                    DP[nnode][i] = new_dist
+
+            DP[nnode][0] = min(DP[nnode][0], cum_dist)
+
+            # 동일 지점 내 다른 금액에 대해 지점의 최소거리로 update
+            for cum_cost_add in range(cum_cost, M + 1):
+                if DP[nnode][cum_cost_add] > cum_dist:
+                    DP[nnode][cum_cost_add] = cum_dist
                 else:
                     break
 
-            queue.append((new_dist, new_cost, nnode))
+            queue.append((cum_dist, cum_cost, nnode))
 
     return DP[-1][0]
 
@@ -54,7 +56,7 @@ for t in range(T):
         u, v, c, d = map(int, input().split()) # 출발, 도착, 비용, 소요시간
         arr[u - 1].append((v - 1, c, d))
 
-    result = Dijkstra(arr, N, M)
+    result = Dijkstra()
     if result == MAX:
         print('Poor KCM')
     else:

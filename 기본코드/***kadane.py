@@ -2,8 +2,8 @@ def maxSubArraySum(arr):
     subarr_sum = arr[0]
     result = arr[0]
 
-    for idx in range(1, len(arr)):
-        subarr_sum = max(subarr_sum + arr[idx], arr[idx])
+    for num in arr[1:]:
+        subarr_sum = max(subarr_sum + num, num)
         result = max(subarr_sum, result)
 
     return result

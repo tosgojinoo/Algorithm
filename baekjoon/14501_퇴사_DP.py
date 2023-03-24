@@ -1,6 +1,18 @@
 # DP
 # Bottom-up, 시작 -> 끝
 # 처음부터, 요소별 T만큼 떨어진 지점부터 끝까지 누적시킨 후 다음 요소를 택할 때와 비교하는 방식
+
+N = int(input())
+DP = [0]*99
+for idx in range(1, N+1):
+    DP[idx] = max(DP[idx-1], DP[idx])
+    T, P = map(int, input().split()) # idx 는 T, DP[idx] 는 P
+    DP[idx+T] = max(DP[idx+T], DP[idx]+P)
+print(DP)
+print(max(DP[N:N+2])) # N-1일까지 or N일 하루 포함 최대값
+
+
+'''
 import sys
 input = sys.stdin.readline
 N = int(input())
@@ -28,3 +40,4 @@ for i in range(N-1, -1, -1):
         DP[i] = max(DP[i+1], schedule[i][1] + DP[i + schedule[i][0]]) # i일에 상담을 하는 것과 상담을 안하는 것 중 큰 것을 선택
 
 print(DP[0])
+'''
